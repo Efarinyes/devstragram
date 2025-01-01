@@ -25,6 +25,7 @@
                         <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">{{str_replace('username', 'nom usuari',  $message)}} </p>
                     @enderror
                 </div>
+
                 <div class="mb-5">
                     <label for="imatge" class="mb-2 block uppercase text-gray-500 font-bold">
                         Imatge de perfil
@@ -38,6 +39,64 @@
                         class="border p-3 w-full rounded-lg"
                     />
                 </div>
+                <div class="mb-5">
+                    <label for="email" class="mb-2 block uppercase text-gray-500 font-bold">
+                        Email
+                    </label>
+                    <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        placeholder="Nou correu"
+                        class="border p-3 w-full rounded-lg @error('email') border-red-500
+                        @enderror"
+                        value="{{ auth()->user()->email }}"
+                    />
+
+                    @error('email')
+                        <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-5">
+                    <label for="oldpassword" class="mb-2 block uppercase text-gray-500 font-bold">
+                        Contrassenya Actual
+                    </label>
+                    <input
+                        id="oldpassword"
+                        name="oldpassword"
+                        type="password"
+                        placeholder="Contrassenya actual"
+                        class="border p-3 w-full rounded-lg @error('oldpassword') border-red-500
+                        @enderror"
+                    />
+                    @error('oldpassword')
+                    <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">{{ $message }}</p>
+                @enderror
+                </div>
+
+                <div class="mb-5">
+                    <label for="password" class="mb-2 block uppercase text-gray-500 font-bold">
+                        Nova Contrassenya
+                    </label>
+                    <input
+                        id="password"
+                        name="password"
+                        type="password"
+                        placeholder="Nova contrassenya"
+                        class="border p-3 w-full rounded-lg @error('password') border-red-500
+                        @enderror"
+                    />
+                    @error('password')
+                        <p class="bg-red-500 text-white my-2 rounded-lg text-sm p-2 text-center">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mb-5">
+                    <label for="password_confirmation" class="mb-2 block uppercase text-gray-500 font-bold">Repetir Nova Contrassenya</label>
+                    <input id="password_confirmation" name="password_confirmation" type="password" placeholder="Repeteix la contrassenya" class="border p-3 w-full rounded-lg">
+                </div>
+
                 <input
                     type="submit"
                     value="Guardar canvis"

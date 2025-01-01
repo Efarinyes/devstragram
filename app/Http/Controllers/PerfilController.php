@@ -8,9 +8,9 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
 
 class PerfilController extends Controller
 {
@@ -36,26 +36,43 @@ class PerfilController extends Controller
                 'min:3',
                 'max:20',
                 'not_in:twitter,editar-perfil'
-            ]
+            ],
+            'email' => [
+                'required',
+                Rule::unique('users', 'email')->ignore(Auth::user()),
+                'min:6'
+            ],
+            'oldpassword'=> ['required']
         ]);
 
-        if($request->imagen) {
+        if(!Hash::check($request->oldpassword, Auth::user()->password)) {
+            return back()->withErrors(['oldpassword', 'Contrassenya incorrecta'])->withInput();
+        }
+
+        if($request->filled('password')) {
+            $request->validate([
+                'password'=> ['required', 'confirmed', 'min:6']
+            ]);
+        }
+
+        if($request->imatge) {
             $manager = new ImageManager(new Driver());
             $imagen = $request->file('imatge');
             $nomImatge = Str::uuid().".".$imagen->extension();
 
 
             $imatgeServidor = $manager->read($imagen);
-            $imatgeServidor->scale(1000, 1000);
+            $imatgeServidor->cover(1000, 1000);
             $imagenPath = public_path('perfils').'/'.$nomImatge;
             $imatgeServidor->save($imagenPath);
-
         }
 
         // Desar canvis
         $usuari = User::find(Auth::user()->id);
         $usuari->username = $request->username;
-        $usuari->imatge = $nomImatge ?? '';
+        $usuari->imatge = $nomImatge ?? Auth::user()->imatge ?? '';
+        $usuari->password = Hash::make($request->password);
+        $usuari->email = $request->email;
         $usuari->save();
 
         return redirect()->route('posts.index', $usuari->username);

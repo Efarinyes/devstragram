@@ -10,7 +10,7 @@
     <div class="flex justify-center">
         <div class="w-full md:w-8/12 lg:w-6/12 flex flex-col items-center md:flex-row">
             <div class="sm:w-8/12 lg:w-6/12 px-5">
-                <img src="{{ asset('img/usuario.svg')}}" alt="imatge usuari" class="w-96">
+                <img src="{{ $user->imatge ?  asset('perfils').'/'.$user->imatge : asset('img/usuario.svg')}}" alt="imatge usuari" class="w-96">
 
             </div>
             <div class="md:w-8/12 lg:w-6/12 px-5 flex flex-col items-center md:justify-center md:items-start py-10 md:py-10">
@@ -36,7 +36,7 @@
                     0 <span class="font-normal">Seguint</span>
                 </p>
                 <p class="text-gray-800 text-sm mb-3 font-bold">
-                    0 <span class="font-normal">Publicacions </span>
+                    {{ $user->posts->count() }} <span class="font-normal">Publicacions </span>
                 </p>
             </div>
         </div>
@@ -53,7 +53,6 @@
                         <img src="{{asset('uploads').'/'.$post->imatge}}" alt="Imatge de la publicació - {{ $post->titol}}">
                     </a>
                 </div>
-
             @endforeach
         </div>
         <div class="my-10">
